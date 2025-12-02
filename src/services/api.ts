@@ -1,9 +1,9 @@
 import type { TopicRequest, TopicResponse } from '../types';
 
-// Use proxy in development, direct API in production
+// Use proxy in development, CORS proxy in production
 const API_BASE_URL = import.meta.env.DEV 
   ? '/api/' 
-  : 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
+  : 'https://cors-anywhere.herokuapp.com/https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
 
 export const fetchTopicData = async (request: TopicRequest): Promise<TopicResponse> => {
   try {
