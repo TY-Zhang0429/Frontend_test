@@ -1,8 +1,13 @@
 import type { TopicRequest, TopicResponse } from '../types';
 
+// Use proxy in development, direct API in production
+const API_BASE_URL = import.meta.env.DEV 
+  ? '/api/' 
+  : 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
+
 export const fetchTopicData = async (request: TopicRequest): Promise<TopicResponse> => {
   try {
-    const response = await fetch('/api/', {
+    const response = await fetch(API_BASE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
