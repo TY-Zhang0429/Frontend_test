@@ -14,15 +14,14 @@ export const fetchTopicData = async (request: TopicRequest): Promise<TopicRespon
   const isZhihu = isZhihuRequest(request);
   const targetAPI = isZhihu ? ZHIHU_API : DOUYIN_XHS_API;
   
-  // Use Vite proxy in development, Vercel proxy in production
-  const apiURL = import.meta.env.DEV ? '/api/' : VERCEL_PROXY;
+  // Direct API call without proxy
+  console.log('Direct API call to:', targetAPI);
   
   try {
-    const response = await fetch(apiURL, {
+    const response = await fetch(targetAPI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Target-API': targetAPI, // Pass target API to Vercel proxy
       },
       body: JSON.stringify(request),
     });
