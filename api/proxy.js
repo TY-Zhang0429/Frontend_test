@@ -1,4 +1,4 @@
-// Vercel Serverless Function for API proxy
+// Vercel Serverless Function for API proxy (v2)
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,6 +15,8 @@ export default async function handler(req, res) {
     try {
       // Read target API from header or default to Douyin/XHS
       const targetAPI = req.headers['x-target-api'] || 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
+      
+      console.log('Proxying to:', targetAPI);
       
       const response = await fetch(targetAPI, {
         method: 'POST',
