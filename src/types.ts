@@ -1,14 +1,23 @@
-export interface TopicRequest {
+// Douyin/XHS Request
+export interface DouyinTopicRequest {
   keyword: string;
-  platform: string;
-  limit: number;
-  page: number;
-  sort: string;
-  order: string;
-  min_growth_rate: number;
-  min_monthly_coverage: number;
-  output_count: number;
+  platform: 'xhs' | 'douyin';
+  limit?: number;
+  page?: number;
+  sort?: string;
+  order?: string;
+  min_growth_rate?: number;
+  min_monthly_coverage?: number;
+  output_count?: number;
 }
+
+// Zhihu Request
+export interface ZhihuTopicRequest {
+  keyword: string;
+  domain?: string | string[];
+}
+
+export type TopicRequest = DouyinTopicRequest | ZhihuTopicRequest;
 
 export interface PricingInfo {
   top10_1: number;
@@ -55,7 +64,8 @@ export interface Meta {
   process_time: string;
 }
 
-export interface TopicResponse {
+// Douyin/XHS Response
+export interface DouyinTopicResponse {
   ret: number;
   msg: string;
   meta: Meta;
@@ -63,3 +73,35 @@ export interface TopicResponse {
   zones: Zones;
   settlement_standard: string;
 }
+
+// Zhihu Question
+export interface ZhihuQuestion {
+  title: string;
+  url: string;
+  score: number;
+  seo_price: number;
+  seo_price_display: string;
+  metrics: {
+    pv_total: string;
+    pv_30_growth: string;
+    top3_likes: number;
+    top1_likes: number;
+  };
+  tags: string[];
+}
+
+// Zhihu Response
+export interface ZhihuTopicResponse {
+  ret: number;
+  msg: string;
+  meta: {
+    root_keyword: string;
+    domain_filter?: string;
+    ai_matrix: string[];
+    total_analyzed: number;
+    time_cost: string;
+  };
+  questions: ZhihuQuestion[];
+}
+
+export type TopicResponse = DouyinTopicResponse | ZhihuTopicResponse;

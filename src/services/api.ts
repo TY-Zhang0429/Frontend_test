@@ -1,19 +1,30 @@
-import type { TopicRequest, TopicResponse } from '../types';
+import type { TopicRequest, TopicResponse, DouyinTopicRequest, ZhihuTopicRequest } from '../types';
 
-// Use Vite proxy in development, direct API with no-cors in production
-const API_BASE_URL = import.meta.env.DEV 
-  ? '/api/' 
-  : 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
+// API endpoints
+const DOUYIN_XHS_API = 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
+const ZHIHU_API = 'https://popularzer-blue-ktsnmowhtm.cn-shanghai.fcapp.run/';
+const VERCEL_PROXY = 'https://seo-topic-analyzer.vercel.app/api/proxy';
+
+function isZhihuRequest(request: TopicRequest): request is ZhihuTopicRequest {
+  return 'domain' in request || !('platform' in request);
+}
 
 export const fetchTopicData = async (request: TopicRequest): Promise<TopicResponse> => {
+  // Determine which API to use
+  const isZhihu = isZhihuRequest(request);
+  const targetAPI = isZhihu ? ZHIHU_API : DOUYIN_XHS_API;
+  
+  // Use Vite proxy in development, Vercel proxy in production
+  const apiURL = import.meta.env.DEV ? '/api/' : VERCEL_PROXY;
+  
   try {
-    const response = await fetch(API_BASE_URL, {
+    const response = await fetch(apiURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Target-API': targetAPI, // Pass target API to Vercel proxy
       },
       body: JSON.stringify(request),
-      ...(import.meta.env.PROD && { mode: 'cors' as RequestMode }),
     });
 
     if (!response.ok) {
@@ -24,23 +35,6 @@ export const fetchTopicData = async (request: TopicRequest): Promise<TopicRespon
     return data;
   } catch (error) {
     console.error("API call failed:", error);
-    // Fallback: try with CORS proxy if direct call fails
-    if (import.meta.env.PROD) {
-      try {
-        const proxyResponse = await fetch('https://corsproxy.io/?' + encodeURIComponent(API_BASE_URL), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(request),
-        });
-        if (proxyResponse.ok) {
-          return await proxyResponse.json();
-        }
-      } catch (proxyError) {
-        console.error("Proxy fallback also failed:", proxyError);
-      }
-    }
     throw error;
   }
 };
