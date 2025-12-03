@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import { Search, BookOpen, Video, MessageSquare, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { TopicRequest } from '../types';
+import type { TopicRequest, DouyinTopicRequest, ZhihuTopicRequest } from '../types';
 
 interface TopicFormProps {
   onSubmit: (request: TopicRequest) => void;
   isLoading: boolean;
 }
 
+interface FormState {
+  keyword: string;
+  platform: 'xhs' | 'douyin' | 'zhihu';
+  domain?: string;
+}
+
 const TopicForm: React.FC<TopicFormProps> = ({ onSubmit, isLoading }) => {
-  const [formData, setFormData] = useState<TopicRequest>({
+  const [formData, setFormData] = useState<FormState>({
     keyword: "荣耀手机",
     platform: "xhs",
-    limit: 50,
-    page: 0,
-    sort: "mounth_search_index",
-    order: "desc",
-    min_growth_rate: 1,
-    min_monthly_coverage: 1,
-    output_count: 50
   });
 
-  const handlePlatformChange = (platform: string) => {
+  const handlePlatformChange = (platform: 'xhs' | 'douyin' | 'zhihu') => {
     setFormData(prev => ({ ...prev, platform }));
   };
 
@@ -31,13 +30,35 @@ const TopicForm: React.FC<TopicFormProps> = ({ onSubmit, isLoading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Build request based on platform
+    let request: TopicRequest;
+    if (formData.platform === 'zhihu') {
+      request = {
+        keyword: formData.keyword,
+        domain: formData.domain,
+      } as ZhihuTopicRequest;
+    } else {
+      request = {
+        keyword: formData.keyword,
+        platform: formData.platform,
+        limit: 50,
+        page: 0,
+        sort: "mounth_search_index",
+        order: "desc",
+        min_growth_rate: 1,
+        min_monthly_coverage: 1,
+        output_count: 50,
+      } as DouyinTopicRequest;
+    }
+    
+    onSubmit(request);
   };
 
   const platforms = [
-    { id: 'xhs', name: '小红书', icon: BookOpen, color: 'text-[#FF2442]', activeBg: 'bg-white' },
-    { id: 'dy', name: '抖音', icon: Video, color: 'text-black', activeBg: 'bg-white' },
-    { id: 'zhihu', name: '知乎', icon: MessageSquare, color: 'text-[#0066FF]', activeBg: 'bg-white' },
+    { id: 'xhs' as const, name: '小红书', icon: BookOpen, color: 'text-[#FF2442]', activeBg: 'bg-white' },
+    { id: 'douyin' as const, name: '抖音', icon: Video, color: 'text-black', activeBg: 'bg-white' },
+    { id: 'zhihu' as const, name: '知乎', icon: MessageSquare, color: 'text-[#0066FF]', activeBg: 'bg-white' },
   ];
 
   return (

@@ -1,4 +1,4 @@
-import type { TopicRequest, TopicResponse, DouyinTopicRequest, ZhihuTopicRequest } from '../types';
+import type { TopicRequest, TopicResponse, ZhihuTopicRequest } from '../types';
 
 // API endpoints
 const DOUYIN_XHS_API = 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
