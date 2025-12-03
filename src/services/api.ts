@@ -3,7 +3,7 @@ import type { TopicRequest, TopicResponse, ZhihuTopicRequest } from '../types';
 // API endpoints
 const DOUYIN_XHS_API = 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
 const ZHIHU_API = 'https://popularzer-blue-ktsnmowhtm.cn-shanghai.fcapp.run/';
-const VERCEL_PROXY = 'https://seo-topic-analyzer.vercel.app/api/proxy';
+const VERCEL_PROXY = 'https://seo-test-seven.vercel.app/api/proxy';
 
 function isZhihuRequest(request: TopicRequest): request is ZhihuTopicRequest {
   return 'domain' in request || !('platform' in request);
