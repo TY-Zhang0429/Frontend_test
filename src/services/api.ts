@@ -3,7 +3,7 @@ import type { TopicRequest, TopicResponse, ZhihuTopicRequest } from '../types';
 // API endpoints
 const DOUYIN_XHS_API = 'https://popularzer-blue-uvpzmhjoqt.cn-shanghai.fcapp.run/';
 const ZHIHU_API = 'https://popularzer-blue-ktsnmowhtm.cn-shanghai.fcapp.run/';
-const VERCEL_PROXY = 'https://seo-test-seven.vercel.app/api/proxy';
+const ALIYUN_PROXY = 'https://front-end-test-vxvxkxqbxs.cn-hangzhou.fcapp.run';
 
 function isZhihuRequest(request: TopicRequest): request is ZhihuTopicRequest {
   return 'domain' in request || !('platform' in request);
@@ -14,8 +14,8 @@ export const fetchTopicData = async (request: TopicRequest): Promise<TopicRespon
   const isZhihu = isZhihuRequest(request);
   const targetAPI = isZhihu ? ZHIHU_API : DOUYIN_XHS_API;
   
-  // Use Vite proxy in development, Vercel proxy in production
-  const apiURL = import.meta.env.DEV ? '/api/' : VERCEL_PROXY;
+  // Use Vite proxy in development, Aliyun proxy in production
+  const apiURL = import.meta.env.DEV ? '/api/' : ALIYUN_PROXY;
   
   try {
     const response = await fetch(apiURL, {
