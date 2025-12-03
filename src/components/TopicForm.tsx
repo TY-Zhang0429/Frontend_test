@@ -28,6 +28,10 @@ const TopicForm: React.FC<TopicFormProps> = ({ onSubmit, isLoading }) => {
     setFormData(prev => ({ ...prev, keyword: e.target.value }));
   };
 
+  const handleDomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, domain: e.target.value }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -137,6 +141,30 @@ const TopicForm: React.FC<TopicFormProps> = ({ onSubmit, isLoading }) => {
           </motion.button>
         </div>
       </div>
+
+      {/* Domain Input (Zhihu only) */}
+      {formData.platform === 'zhihu' && (
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
+        >
+          <span className="text-sm font-semibold text-gray-500 w-24 uppercase tracking-wider">领域筛选</span>
+          <div className="flex-1">
+            <input
+              type="text"
+              value={formData.domain || ''}
+              onChange={handleDomainChange}
+              placeholder="选填：数码、科技、商业等（可用逗号分隔多个）"
+              className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#6366F1]/20 focus:border-[#6366F1] outline-none transition-all text-base hover:bg-white hover:shadow-sm"
+            />
+            <p className="mt-2 text-xs text-gray-400">
+              可选领域：ACG、互联网、人文、体育、健康、商业、娱乐、宠物、家居生活、工程技术、影视、心理学、情感、教育、数码、旅行、时尚、母婴、汽车、法律、游戏、生活服务、社会科学、科技、经济、美食、职场、自然科学、艺术、财税、运动健身、金融、音乐
+            </p>
+          </div>
+        </motion.div>
+      )}
     </form>
   );
 };
